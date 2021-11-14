@@ -28,11 +28,10 @@
              pipe(
                  (str) => Number(str),
                  (num) => Math.round(num),
-                 (num) => api.get('https://api.tech/numbers/base', { from: 10, to: 2, number: num }),
+                 tap(writeLog),
                  pipeWith(andThen)([
-                     tap(console.log),
+                    (num) => api.get('https://api.tech/numbers/base', { from: 10, to: 2, number: num }),
                      prop('result'),
-                     tap(console.log),
                      tap(writeLog),
                      length,
                      tap(writeLog),
