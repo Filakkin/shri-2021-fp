@@ -14,38 +14,41 @@
  * Иногда промисы от API будут приходить в состояние rejected, (прямо как и API в реальной жизни)
  * Ответ будет приходить в поле {result}
  */
-import Api from '../tools/api';
-
-const api = new Api();
-
-/**
- * Я – пример, удали меня
- */
-const wait = time => new Promise(resolve => {
-    setTimeout(resolve, time);
-})
-
-const processSequence = ({value, writeLog, handleSuccess, handleError}) => {
-    /**
-     * Я – пример, удали меня
-     */
-    writeLog(value);
-
-    api.get('https://api.tech/numbers/base', {from: 2, to: 10, number: '01011010101'}).then(({result}) => {
-        writeLog(result);
-    });
-
-    wait(2500).then(() => {
-        writeLog('SecondLog')
-
-        return wait(1500);
-    }).then(() => {
-        writeLog('ThirdLog');
-
-        return wait(400);
-    }).then(() => {
-        handleSuccess('Done');
-    });
-}
-
-export default processSequence;
+ import { pipe, pipeWith, andThen, tap, test, ifElse, prop, length } from 'ramda';
+ import Api from '../tools/api';
+ 
+ const api = new Api();
+ 
+ 
+ const processSequence = ({ value, writeLog, handleSuccess, handleError }) => {
+     pipe(
+         tap(writeLog),
+         ifElse(
+             test(/^[1-9]{1}[0-9\\.]{2,9}/),
+             pipe(
+                 (str) => Number(str),
+                 (num) => Math.round(num),
+                 (num) => api.get('https://api.tech/numbers/base', { from: 10, to: 2, number: num }),
+                 pipeWith(andThen)([
+                     tap(console.log),
+                     prop('result'),
+                     tap(console.log),
+                     tap(writeLog),
+                     length,
+                     tap(writeLog),
+                     (num) => Math.pow(num, 2),
+                     tap(writeLog),
+                     (num) => num % 3,
+                     tap(writeLog),
+                     (num) => api.get(`https://animals.tech/${num}`, {}),
+                     prop('result'),
+                     handleSuccess
+                 ])
+             ),
+             () => handleError('ValidationError')
+         )
+     )(value)
+ }
+ 
+ export default processSequence;
+ 
