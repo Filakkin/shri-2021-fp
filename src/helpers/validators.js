@@ -119,25 +119,25 @@ const isStarNotWhiteAndNotRed = compose(
 const triangleAndSquareAreSameAndNowWhite = converge(allPass([equals, compose(not, isWhite)]), [getTriangle, getSquare]);
 
 // 1. Красная звезда, зеленый квадрат, все остальные белые.
-export const validateFieldN1 = (input) => allPass([isSquareGreen, isStarRed, isAllExceptStarAndSquareWhite])(input);
+export const validateFieldN1 = allPass([isSquareGreen, isStarRed, isAllExceptStarAndSquareWhite]);
 
 // 2. Как минимум две фигуры зеленые.
-export const validateFieldN2 = (input) => isThereMoreThanOneGreen(input);
+export const validateFieldN2 = isThereMoreThanOneGreen;
 
 // 3. Количество красных фигур равно кол-ву синих.
-export const validateFieldN3 = (input) => converge(equals, [countBlueColors, countRedColors])(input);
+export const validateFieldN3 = converge(equals, [countBlueColors, countRedColors]);
 
 // 4. Синий круг, красная звезда, оранжевый квадрат
-export const validateFieldN4 = (input) => allPass([isCircleBlue, isStarRed, isSquareOrange])(input);
+export const validateFieldN4 = allPass([isCircleBlue, isStarRed, isSquareOrange]);
 
 // 5. Три фигуры одного любого цвета кроме белого (четыре фигуры одного цвета – это тоже true).
-export const validateFieldN5 = (input) => isThereMoreThanTwoNotWhite(input);
+export const validateFieldN5 = isThereMoreThanTwoNotWhite;
 
 // 6. Две зеленые фигуры (одна из них треугольник), еще одна любая красная.
-export const validateFieldN6 = (input) => allPass([isTriangleGreen, isThereTwoGreen, isThereOneRed])(input);
+export const validateFieldN6 = allPass([isTriangleGreen, isThereTwoGreen, isThereOneRed]);
 
 // 7. Все фигуры оранжевые.
-export const validateFieldN7 = (input) => areAllOrange(input);
+export const validateFieldN7 = areAllOrange;
 
 // 8. Не красная и не белая звезда.
 export const validateFieldN8 = (input) => isStarNotWhiteAndNotRed(input);
