@@ -24,7 +24,7 @@
      pipe(
          tap(writeLog),
          ifElse(
-             test(/^[1-9]{1}[0-9\\.]{2,8}/),
+             test(/^([1-9]|(0\\.)){1}[0-9\\.]{2,8}/),
              pipe(
                  (str) => Number(str),
                  (num) => Math.round(num),
